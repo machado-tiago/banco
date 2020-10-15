@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -13,7 +12,8 @@ import javax.validation.constraints.Pattern;
 public class Cliente {
     
     @Id
-    @Pattern(regexp = "99999999999")
+    @NotNull(message = "O CPF é obrigatório.")
+    @Pattern(regexp = "\\d{11}?", message = "O CPF deve ser preenchido com 11 dígitos, somente os números.")
     private String cpf;
 
     @NotNull(message = "O nome é obrigatório.")
@@ -22,8 +22,7 @@ public class Cliente {
     @NotNull(message = "O sobrenome é obrigatório.")
     private String sobrenome;
 
-    @Email
-    // @Pattern(regexp=".+@.+\\..+", message="Please provide a valid email address") ou regexp = "^(.+)@(.+)$"
+    @Pattern(regexp = "(.+)@(.+)[.](.+)", message = "Preencha um e-mail válido.")
     private String email;
     private LocalDate nascimento;
     @OneToOne
