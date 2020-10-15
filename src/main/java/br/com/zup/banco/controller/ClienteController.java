@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,11 +27,7 @@ public class ClienteController {
             return ResponseEntity.created(uri).body(cliente); //retorna o código 201, respondendo o objeto criado no corpo da resposta
         }else{
             //Get all errors
-            List<String> errors = ex.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .map(x -> x.getDefaultMessage())
-            .collect(Collectors.toList());
+            List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.toList());
 
             return ResponseEntity.badRequest().body(errors.toArray());
         }

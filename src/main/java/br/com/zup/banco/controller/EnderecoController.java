@@ -1,7 +1,6 @@
 package br.com.zup.banco.controller;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +15,11 @@ import br.com.zup.banco.model.Endereco;
 @RequestMapping("/cliente/{id}/endereco")
 public class EnderecoController {
     
+    //@Consumes (MediaType.APPLICATION_JSON)
+    //@Produces (MediaType.APPLICATION_JSON)
     @PostMapping
-    public ResponseEntity novo(@PathVariable("id") String id, @RequestBody @Valid Endereco endereco) {
-        
-        return ResponseEntity.ok().body(endereco);
+    public ResponseEntity<Object> novo(@PathVariable("id") String id, @RequestBody @Valid Endereco endereco) {
+        //pesquisar o cliente, adicionar o endereço e salvar
+        return ResponseEntity.ok().body(endereco); //Response.status(201).build();
     }
 }
