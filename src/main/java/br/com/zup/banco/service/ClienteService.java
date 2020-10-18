@@ -3,6 +3,8 @@ package br.com.zup.banco.service;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import br.com.zup.banco.repository.ClienteRepository;
 public class ClienteService {
     @Autowired
     ClienteRepository clienteRepository;
+
+    @Transactional
     public Object salvar(Cliente cliente) {
         Object errorValidation = errorValidation(cliente);
         if (errorValidation==null) {
@@ -22,6 +26,7 @@ public class ClienteService {
         }
     }    
 
+    
     private Map<String,String> errorValidation(Cliente cliente) {
         boolean validated = true;
         Map<String,String> map = new LinkedHashMap<>();
@@ -48,6 +53,7 @@ public class ClienteService {
         
     }
 
+    @Transactional
 	public Cliente findByCpf(String cpf) {
 		return clienteRepository.findByCpf(cpf);
 	}

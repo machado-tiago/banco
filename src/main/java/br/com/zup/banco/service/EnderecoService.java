@@ -1,7 +1,5 @@
 package br.com.zup.banco.service;
 
-import java.util.Optional;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +28,9 @@ public class EnderecoService {
         return endereco;
     }
 
+    @Transactional
 	public Endereco findByClienteCpf(String cpf) {
 		return enderecoRepository.findByClienteCpf(cpf);
 	}
 
-
-    // Cliente cliente = clienteService.findByCpf(cpf);
-    // endereco.setCliente(cliente);
-    // endereco = enderecoService.salvar(endereco);
-    // cliente.setEndereco(endereco);
-    // clienteService.salvar(cliente);
 }

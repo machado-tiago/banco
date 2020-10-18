@@ -2,10 +2,8 @@ package br.com.zup.banco.model;
 
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class Cliente {
     public static final int IDADE_MIN=18;
     
-    //@UniqueElements***************************************
     @Id
     @NotNull(message = "O CPF é obrigatório.")
     @Pattern(regexp = "(\\d{11})?", message = "O CPF deve ser preenchido com 11 dígitos, somente os números.")
