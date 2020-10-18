@@ -2,18 +2,16 @@ package br.com.zup.banco.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 public class Cliente {
@@ -40,9 +38,8 @@ public class Cliente {
     @NotNull(message = "O nascimento é obrigatório.")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate nascimento;
-
-
-    @OneToOne
+    
+    @OneToOne(mappedBy = "cliente")
     private Endereco endereco;
 
     public Boolean nascimentoCheck() {

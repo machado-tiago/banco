@@ -1,12 +1,17 @@
 package br.com.zup.banco.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Endereco {
@@ -15,25 +20,27 @@ public class Endereco {
     private Long id;
 
     @NotNull(message = "Cep é obrigatório")
-    @Pattern(regexp = "99999999", message = "Digite o CEP no formato: 99999999.")
+    @Pattern(regexp = "\\d{5}-\\d{3}", message = "Digite o CEP no formato: 99999-999.")
     private String cep;
 
-    @NotNull(message = "Rua é obrigatória.")
+    @NotBlank(message = "Rua é obrigatória.")
     private String rua;
 
-    @NotNull(message = "Bairro é obrigatório.")
+    @NotBlank(message = "Bairro é obrigatório.")
     private String bairro;
 
-    @NotNull(message = "Complemento é obrigatório.")
+    @NotBlank(message = "Complemento é obrigatório.")
     private String complemento;
 
-    @NotNull(message = "Cidade é obrigatória.")
+    @NotBlank(message = "Cidade é obrigatória.")
     private String cidade;
 
-    @NotNull(message = "Estado é obrigatório.")
+    @NotBlank(message = "Estado é obrigatório.")
     private String estado;
 
     @OneToOne
+    @JoinColumn(name = "cliente_cpf")
+    @JsonIgnore
     private Cliente cliente;
 
     public Long getId() {
@@ -99,6 +106,8 @@ public class Endereco {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
+
+
 
     
 }
