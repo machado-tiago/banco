@@ -9,5 +9,9 @@ import br.com.zup.banco.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,String>{
 
+	Cliente findByEmail(String email);
+
+	Cliente findByCpf(String cpf);
+
     
 }

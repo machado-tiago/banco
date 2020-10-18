@@ -26,8 +26,7 @@ public class ExceptionConfig extends ResponseEntityExceptionHandler{
                 List<FieldError> errors = ex.getBindingResult().getFieldErrors();
                 Map<String, String> bodymsg = new LinkedHashMap<>();
                 for (FieldError fieldError : errors) {
-                    bodymsg.put("field", fieldError.getField());
-                    bodymsg.put("error", fieldError.getDefaultMessage());
+                    bodymsg.put(fieldError.getField(), fieldError.getDefaultMessage());
                 }
                 return new ResponseEntity<>(bodymsg, headers, HttpStatus.BAD_REQUEST);
     }
@@ -38,7 +37,7 @@ public class ExceptionConfig extends ResponseEntityExceptionHandler{
         
         Map<String,String> body = new LinkedHashMap<>();
         if (ex.contains(DateTimeException.class)) {
-                body.put("error","Invalid date format! " + ex.getMostSpecificCause().getLocalizedMessage()+ ". Expected date format: "+Constant.getDateFormatString()); 
+                body.put("invalid date format", ex.getMostSpecificCause().getLocalizedMessage()+ ". Expected date format: "+Constant.getDateFormatString()); 
     
         } else {
             body.put("error",ex.getMostSpecificCause().getLocalizedMessage()); 

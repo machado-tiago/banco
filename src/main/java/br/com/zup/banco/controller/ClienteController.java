@@ -1,12 +1,11 @@
 package br.com.zup.banco.controller;
 
 import java.net.URI;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,15 +24,15 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<Object> novo(@Valid @RequestBody Cliente cliente, UriComponentsBuilder uriComponentsBuilder) {
-        Cliente result = clienteService.salvar(cliente);
-        if (result!=null) {
-            URI uri = uriComponentsBuilder.path("/cliente/{cpf}").buildAndExpand(cliente.getCpf()).toUri(); 
+        Object result = clienteService.salvar(cliente);
+        if (result.getClass()==(cliente.getClass())) {
+            URI uri = uriComponentsBuilder.path("/cliente/{cpf}/endereco").buildAndExpand(cliente.getCpf()).toUri(); 
             return ResponseEntity.created(uri).body(result);
 
         } else {
-            Map<String,String> map = new LinkedHashMap<>();
-            map.put("error", "O cliente deve ter " + Cliente.IDADE_MIN + " anos ou mais.");
-            return ResponseEntity.badRequest().body(map);   
+            return ResponseEntity.badRequest().body(result);
         }
     }
+
+
 }

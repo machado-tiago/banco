@@ -5,11 +5,15 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 public class Cliente {
@@ -21,11 +25,11 @@ public class Cliente {
     @Pattern(regexp = "(\\d{11})?", message = "O CPF deve ser preenchido com 11 dígitos, somente os números.")
     private String cpf;
 
-    @NotNull(message = "O nome é obrigatório.")
+    @NotBlank(message = "O nome é obrigatório.")
     private String nome;
 
     
-    @NotNull(message = "O sobrenome é obrigatório.")
+    @NotBlank(message = "O sobrenome é obrigatório.")
     private String sobrenome;
 
     @NotNull(message = "O email é obrigatório.")
@@ -33,8 +37,8 @@ public class Cliente {
     private String email;
 
     
+    @NotNull(message = "O nascimento é obrigatório.")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    @Past(message = "O cliente deve ter 18 anos ou mais.")
     private LocalDate nascimento;
 
 
@@ -45,7 +49,7 @@ public class Cliente {
         if (this.getNascimento().plusYears(IDADE_MIN).isBefore(LocalDate.now())) {
             return true;
         } else {
-            return false;    
+            return false;
         }
     }
 
