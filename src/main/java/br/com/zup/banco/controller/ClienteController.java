@@ -1,18 +1,16 @@
 package br.com.zup.banco.controller;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,15 +24,16 @@ public class ClienteController {
     ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<Object> novo(@Valid @RequestBody Cliente cliente, MethodArgumentNotValidException ex,UriComponentsBuilder uriComponentsBuilder) {
-        if (ex != null){
-            clienteService.salvar(cliente);
+    public ResponseEntity<Object> novo(@Valid @RequestBody Cliente cliente, UriComponentsBuilder uriComponentsBuilder) {
+        Cliente result = clienteService.salvar(cliente);
+        if (result!=null) {
             URI uri = uriComponentsBuilder.path("/cliente/{cpf}").buildAndExpand(cliente.getCpf()).toUri(); 
-            return ResponseEntity.created(uri).body(cliente);
-        }else{
-            //Get all errors
-            List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors.toArray());
+            return ResponseEntity.created(uri).body(result);
+
+        } else {
+            Map<String,String> map = new LinkedHashMap<>();
+            map.put("error", "O cliente deve ter " + Cliente.IDADE_MIN + " anos ou mais.");
+            return ResponseEntity.badRequest().body(map);   
         }
     }
 }

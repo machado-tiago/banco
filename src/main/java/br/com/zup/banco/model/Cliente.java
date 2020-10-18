@@ -6,27 +6,48 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Cliente {
+    public static final int IDADE_MIN=18;
     
+    //@UniqueElements***************************************
     @Id
     @NotNull(message = "O CPF é obrigatório.")
-    @Pattern(regexp = "\\d{11}?", message = "O CPF deve ser preenchido com 11 dígitos, somente os números.")
+    @Pattern(regexp = "(\\d{11})?", message = "O CPF deve ser preenchido com 11 dígitos, somente os números.")
     private String cpf;
 
     @NotNull(message = "O nome é obrigatório.")
     private String nome;
 
+    
     @NotNull(message = "O sobrenome é obrigatório.")
     private String sobrenome;
 
-    @Pattern(regexp = "(.+)@(.+)[.](.+)", message = "Preencha um e-mail válido.")
+    @NotNull(message = "O email é obrigatório.")
+    @Pattern(regexp = "(.+)@(.+)(\\.\\w{2,3})$", message = "Preencha um e-mail válido.")
     private String email;
+
+    
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @Past(message = "O cliente deve ter 18 anos ou mais.")
     private LocalDate nascimento;
+
+
     @OneToOne
     private Endereco endereco;
+
+    public Boolean nascimentoCheck() {
+        if (this.getNascimento().plusYears(IDADE_MIN).isBefore(LocalDate.now())) {
+            return true;
+        } else {
+            return false;    
+        }
+    }
 
     public String getCpf() {
         return cpf;
@@ -65,9 +86,22 @@ public class Cliente {
     }
 
     public void setNascimento(LocalDate nascimento) {
-        this.nascimento = nascimento;
+            this.nascimento = nascimento;
+        }
+        
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    public static int getIdadeMin() {
+        return IDADE_MIN;
     }
     
+
 
     
 }

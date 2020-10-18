@@ -11,8 +11,10 @@ public class ClienteService {
     @Autowired
     ClienteRepository clienteRepository;
     public Cliente salvar(Cliente cliente) {
-        return clienteRepository.save(cliente);
+        if (cliente.nascimentoCheck()){
+            return clienteRepository.save(cliente);
+        }else{
+            return null;
+        }
     }
-    
-
 }
