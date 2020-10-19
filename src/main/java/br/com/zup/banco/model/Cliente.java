@@ -9,8 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
 public class Cliente {
     public static final int IDADE_MIN=18;
@@ -33,7 +31,6 @@ public class Cliente {
 
     
     @NotNull(message = "O nascimento é obrigatório.")
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate nascimento;
     
     @OneToOne(mappedBy = "cliente")

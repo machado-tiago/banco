@@ -32,12 +32,13 @@ public class ExceptionConfig extends ResponseEntityExceptionHandler{
     }
     
     @Override
+    //error handle for invalid data format
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
         
         Map<String,String> body = new LinkedHashMap<>();
         if (ex.contains(DateTimeException.class)) {
-                body.put("invalid date format", ex.getMostSpecificCause().getLocalizedMessage()+ ". Expected date format: dd/MM/yyyy"); 
+                body.put("invalid date format", ex.getMostSpecificCause().getLocalizedMessage()+ ". Expected date format: yyyy-MM-dd"); 
     
         } else {
             body.put("error",ex.getMostSpecificCause().getLocalizedMessage()); 

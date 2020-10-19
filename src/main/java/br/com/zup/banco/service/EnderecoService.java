@@ -19,8 +19,7 @@ public class EnderecoService {
     ClienteService clienteService;
 
     @Transactional
-    public Endereco salvar(Endereco endereco, String cpf){
-        Cliente cliente = clienteService.findByCpf(cpf); 
+    public Endereco salvar(Endereco endereco, Cliente cliente){
         endereco.setCliente(cliente);
         endereco = enderecoRepository.save(endereco);
         cliente.setEndereco(endereco);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.zup.banco.model.Cliente;
 import br.com.zup.banco.model.Endereco;
 import br.com.zup.banco.service.ClienteService;
 import br.com.zup.banco.service.EnderecoService;
@@ -28,14 +29,23 @@ public class EnderecoController {
     
     @GetMapping
     public ResponseEntity<Object> getEndereco(@PathVariable("cpf") String cpf){
-        return ResponseEntity.ok().body(enderecoService.findByClienteCpf(cpf));
+        Endereco endereco = enderecoService.findByClienteCpf(cpf);
+        if (endereco==null){
+            return ResponseEntity.notFound().build();
+        }else{
+            return ResponseEntity.ok().body(endereco);
+        }
     }
 
     @PostMapping
     public ResponseEntity<Object> novo(@PathVariable("cpf") String cpf, @RequestBody @Valid Endereco endereco,UriComponentsBuilder uriComponentsBuilder) {
-        endereco = enderecoService.salvar(endereco, cpf);
-        
-        uriComponentsBuilder.path("/cliente/{cpf}/cpf_file").buildAndExpand(endereco).toUri();
-        return ResponseEntity.ok().body(endereco); 
+        Cliente cliente = clienteService.findByCpf(cpf); 
+        if (cliente==null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            endereco = enderecoService.salvar(endereco, cliente);
+            uriComponentsBuilder.path("/cliente/{cpf}/cpf_file").buildAndExpand(endereco).toUri();
+            return ResponseEntity.ok().body(endereco); 
+        }
     }
 }
