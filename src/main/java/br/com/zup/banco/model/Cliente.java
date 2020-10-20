@@ -1,9 +1,12 @@
 package br.com.zup.banco.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,11 +23,14 @@ public class Cliente {
     @Pattern(regexp = "(\\d{11})?", message = "O CPF deve ser preenchido com 11 dígitos, somente os números.")
     private String cpf;
 
+    @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Proposta> propostas;
+
     @NotBlank(message = "O nome é obrigatório.")
     private String nome;
 
-    @JsonIgnore
-    private String cpfFile;
+
     
     @NotBlank(message = "O sobrenome é obrigatório.")
     private String sobrenome;
@@ -37,7 +43,7 @@ public class Cliente {
     @NotNull(message = "O nascimento é obrigatório.")
     private LocalDate nascimento;
     
-    @OneToOne(mappedBy = "cliente")
+    @OneToOne(mappedBy = "cliente",cascade = CascadeType.ALL)
     private Endereco endereco;
 
     public Boolean nascimentoCheck() {
@@ -100,14 +106,17 @@ public class Cliente {
         return IDADE_MIN;
     }
 
-    public String getCpfFile() {
-        return cpfFile;
+    public Cliente() {
     }
 
-    public void setCpfFile(String cpfFile) {
-        this.cpfFile = cpfFile;
+    public List<Proposta> getPropostas() {
+        return propostas;
+    }
+
+    public void setPropostas(List<Proposta> propostas) {
+        this.propostas = propostas;
     }
 
 
-    
+
 }

@@ -20,6 +20,7 @@ import br.com.zup.banco.model.Cliente;
 import br.com.zup.banco.model.Endereco;
 import br.com.zup.banco.service.ClienteService;
 import br.com.zup.banco.service.EnderecoService;
+import br.com.zup.banco.service.PropostaService;
 
 @RestController
 @RequestMapping("/cliente/{cpf}/endereco")
@@ -30,6 +31,9 @@ public class EnderecoController {
 
     @Autowired
     ClienteService clienteService;
+
+    @Autowired
+    PropostaService propostaService;
     
     @GetMapping
     public ResponseEntity<Object> getEndereco(@PathVariable String cpf){
@@ -49,7 +53,7 @@ public class EnderecoController {
             return ResponseEntity.notFound().build();
         } else if (cliente.getEndereco()==null) {
             endereco = enderecoService.salvar(endereco, cliente);
-            URI uri =uriComponentsBuilder.path("/cliente/{cpf}/cpf_file").buildAndExpand(cliente.getCpf()).toUri();
+            URI uri =uriComponentsBuilder.path("/proposta/{id}/cpf_file").buildAndExpand(String.valueOf(propostaService.findLastByClienteCpf(cpf))).toUri();
             return ResponseEntity.created(uri).body(endereco);
         }else{
             Map<String,String> body = new LinkedHashMap<>();

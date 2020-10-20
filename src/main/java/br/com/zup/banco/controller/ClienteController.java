@@ -25,8 +25,10 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<Object> novo(@Valid @RequestBody Cliente cliente, UriComponentsBuilder uriComponentsBuilder) {
-        Object result = clienteService.salvar(cliente);
+        Object result = clienteService.novo(cliente);
+
         if (result.getClass()==(cliente.getClass())) {
+
             URI uri = uriComponentsBuilder.path("/cliente/{cpf}/endereco").buildAndExpand(cliente.getCpf()).toUri(); 
             return ResponseEntity.created(uri).body(result);
 

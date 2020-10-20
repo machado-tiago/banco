@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,40 +16,47 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.zup.banco.model.Cliente;
-import br.com.zup.banco.service.ClienteService;
+import br.com.zup.banco.model.Proposta;
 import br.com.zup.banco.service.FileService;
+import br.com.zup.banco.service.PropostaService;
 
 @RestController
-@RequestMapping("/cliente/{cpf}/cpf_file")
+@RequestMapping("/proposta/{id}/cpf_file")
 public class CpfFileController {
 
     @Autowired
-    private ClienteService clienteService;
+    private PropostaService propostaService;
 
     @Autowired
     private FileService fileService;
 
-
     @PostMapping
-    public ResponseEntity<Object> upload(@PathVariable String cpf, @RequestParam MultipartFile file,
+    public ResponseEntity<Object> upload(@PathVariable("id") Long id, @RequestParam MultipartFile file,
             UriComponentsBuilder uriComponentsBuilder) throws IllegalStateException, IOException {
-         
-        Cliente cliente = clienteService.findByCpf(cpf); 
 
-        if (cliente==null || cliente.getEndereco()==null) {
-            return ResponseEntity.notFound().build();
-
+        if (file.isEmpty()) {
+            Map<String,String> body =  new LinkedHashMap<>();
+            body.put("field", "file");
+            body.put("error", "O campo é obrigatório.");
+            return ResponseEntity.badRequest().body(body);
         } else {
-            fileService.salvar(file, cliente);
-            Map<String,String> body = new LinkedHashMap<>();
-            body.put("message", "File successfully uploaded!");
-            body.put("fileName", file.getOriginalFilename());
-            body.put("file type", file.getContentType());
+            Optional<Proposta> proposta = propostaService.findById(id);
 
-            URI uri = uriComponentsBuilder.path("/cliente/{cpf}/proposta").buildAndExpand(cliente.getCpf()).toUri(); 
-            return ResponseEntity.created(uri).body(body);
-        }    
+            if (!proposta.isPresent()) {
+                return ResponseEntity.notFound().build();
+    
+            } else {
+                fileService.salvar(file, proposta.get());
+                Map<String,String> body = new LinkedHashMap<>();
+                body.put("message", "File successfully uploaded!");
+                body.put("fileName", file.getOriginalFilename());
+                body.put("file type", file.getContentType());
+    
+                URI uri = uriComponentsBuilder.path("/proposta/{id}").buildAndExpand(proposta.get().getId()).toUri(); 
+                return ResponseEntity.created(uri).body(body);
+            }    
+        }
+        
     }
     
 

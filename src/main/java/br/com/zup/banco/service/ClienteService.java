@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.zup.banco.model.Cliente;
+import br.com.zup.banco.model.Proposta;
 import br.com.zup.banco.repository.ClienteRepository;
 
 @Service
@@ -16,11 +17,16 @@ public class ClienteService {
     @Autowired
     ClienteRepository clienteRepository;
 
+    @Autowired
+    PropostaService propostaService;
+
     @Transactional
-    public Object salvar(Cliente cliente) {
+    public Object novo(Cliente cliente) {
         Object errorValidation = errorValidation(cliente);
         if (errorValidation==null) {
-            return clienteRepository.save(cliente);    
+            cliente = clienteRepository.save(cliente);  
+            propostaService.novaProposta(cliente);
+            return clienteRepository.save(cliente);  
         } else {
             return errorValidation;
         }
@@ -56,5 +62,10 @@ public class ClienteService {
     @Transactional
 	public Cliente findByCpf(String cpf) {
 		return clienteRepository.findByCpf(cpf);
+	}
+
+
+	public Cliente salvar(Cliente cliente) {
+            return clienteRepository.save(cliente); 
 	}
 }
