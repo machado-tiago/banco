@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +45,12 @@ public class CpfFileController {
 
             if (!proposta.isPresent()) {
                 return ResponseEntity.notFound().build();
-    
+
+            }else if(proposta.get().getCliente().getEndereco()==null){
+                Map<String,String> body =  new LinkedHashMap<>();
+                body.put("error", "É necessário que o endereço esteja preenchido para seguir com essa solicitação.");
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(body);
+
             } else {
                 fileService.salvar(file, proposta.get());
                 Map<String,String> body = new LinkedHashMap<>();
