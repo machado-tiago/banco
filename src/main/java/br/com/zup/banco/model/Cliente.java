@@ -1,7 +1,5 @@
 package br.com.zup.banco.model;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;

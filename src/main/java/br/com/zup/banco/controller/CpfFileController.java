@@ -2,13 +2,10 @@ package br.com.zup.banco.controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
