@@ -1,5 +1,9 @@
 package br.com.zup.banco.controller;
 
+import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +33,7 @@ public class EnderecoController {
     ClienteService clienteService;
     
     @GetMapping
-    public ResponseEntity<Object> getEndereco(@PathVariable("cpf") String cpf){
+    public ResponseEntity<Object> getEndereco(@PathVariable String cpf){
         Endereco endereco = enderecoService.findByClienteCpf(cpf);
         if (endereco==null){
             return ResponseEntity.notFound().build();
@@ -38,14 +43,19 @@ public class EnderecoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> novo(@PathVariable("cpf") String cpf, @RequestBody @Valid Endereco endereco,UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<Object> novo(@PathVariable String cpf, @RequestBody @Valid Endereco endereco,
+    UriComponentsBuilder uriComponentsBuilder) {
         Cliente cliente = clienteService.findByCpf(cpf); 
         if (cliente==null) {
             return ResponseEntity.notFound().build();
-        } else {
+        } else if (cliente.getEndereco()==null) {
             endereco = enderecoService.salvar(endereco, cliente);
-            uriComponentsBuilder.path("/cliente/{cpf}/cpf_file").buildAndExpand(endereco).toUri();
-            return ResponseEntity.ok().body(endereco); 
+            URI uri =uriComponentsBuilder.path("/cliente/{cpf}/cpf_file").buildAndExpand(cliente.getCpf()).toUri();
+            return ResponseEntity.created(uri).body(endereco);
+        }else{
+            Map<String,String> body = new LinkedHashMap<>();
+            body.put("error", "O cliente já possui endereço cadastrado");
+            return ResponseEntity.badRequest().body(body);
         }
     }
 }

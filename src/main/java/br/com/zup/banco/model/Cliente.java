@@ -1,5 +1,7 @@
 package br.com.zup.banco.model;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -8,6 +10,8 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Cliente {
@@ -21,6 +25,8 @@ public class Cliente {
     @NotBlank(message = "O nome é obrigatório.")
     private String nome;
 
+    @JsonIgnore
+    private String cpfFile;
     
     @NotBlank(message = "O sobrenome é obrigatório.")
     private String sobrenome;
@@ -95,7 +101,14 @@ public class Cliente {
     public static int getIdadeMin() {
         return IDADE_MIN;
     }
-    
+
+    public String getCpfFile() {
+        return cpfFile;
+    }
+
+    public void setCpfFile(String cpfFile) {
+        this.cpfFile = cpfFile;
+    }
 
 
     

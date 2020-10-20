@@ -38,7 +38,7 @@ public class ExceptionConfig extends ResponseEntityExceptionHandler{
         
         Map<String,String> body = new LinkedHashMap<>();
         if (ex.contains(DateTimeException.class)) {
-                body.put("invalid date format", ex.getMostSpecificCause().getLocalizedMessage()+ ". Expected date format: yyyy-MM-dd"); 
+            body.put("invalid date format", ex.getMostSpecificCause().getLocalizedMessage()+ ". Expected date format: yyyy-MM-dd"); 
     
         } else {
             body.put("error",ex.getMostSpecificCause().getLocalizedMessage()); 
